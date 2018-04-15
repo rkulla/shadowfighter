@@ -1,0 +1,9 @@
+jab
+cross
+hook
+teep
+right elbow
+left elbow
+right knee
+left knee
+leg kick
