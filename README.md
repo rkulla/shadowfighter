@@ -36,22 +36,23 @@ That last line `^D` means type `Ctrl+D` on your keyboard to specify you're done 
 
 * Boxing:
 
-    ./shadowfighter -jab -combo <boxing.txt
+        ./shadowfighter -jab -combo < boxing.txt
 
 * Muay Thai: 
 
-    ./shadowfighter -delay=3s -combo -wildcard <thai-boxing.txt
+        ./shadowfighter -delay=3s -combo -wildcard < thai-boxing.txt
 
   For wildcard it will say "whatever" last. So do whatever you want (e.g. Spinning Back Fist).
 
 * FMA (Filipino Martial Arts, such as Kali/Arnis/Eskrima.)
 
-    ./shadowfighter -combo <fma.txt
+        ./shadowfighter -combo < fma.txt
 
   Calls out angles of attack 1-7. Add more if you want.
+
   Tip: Alternatively think of blocking against those angles coming at you.
 
 * Tai Chi:
 
-    ./shadowfighter -delay=7s --speed=200 -voice=Victoria <taichi.txt
+        ./shadowfighter -delay=7s --speed=200 -voice=Victoria < taichi.txt
 
