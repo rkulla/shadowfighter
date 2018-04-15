@@ -34,6 +34,8 @@ If you don't specify a filename, it will read from STDIN so you can dynamically 
     ^D
 That last line `^D` means type `Ctrl+D` on your keyboard to specify you're done inputting commands.
 
+There are some default files to get you started. Feel free to edit them how you like on your machine:
+
 * Boxing:
 
     `./shadowfighter -jab -combo < boxing.txt`
