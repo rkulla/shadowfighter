@@ -1,8 +1,8 @@
 # ShadowFighter
 
-Customiable shadowboxing drills for different martial arts.
+Audio Shadowboxing drills for different martial arts.
 
-This program will use your Mac's speech command to call out random lines from a text file
+This program will use MacOS's speech command to call out random lines from a text file
 that you can use to drill different martial arts strikes/blocks.
 
 It's designed to be customizable: Simply tweak the provided text files or add your own.
