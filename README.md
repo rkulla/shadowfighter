@@ -7,6 +7,11 @@ that you can use to drill different martial arts strikes/blocks.
 
 It's designed to be customizable: Simply tweak the provided text files or add your own.
 
+## Requirements
+
+Currently requires a Mac and the free [say](https://support.apple.com/kb/PH25378?viewlocale=en_US&locale=en_US
+) command-line utility.
+
 ## Usage
 
     ./shadowfighter [flags] < [file.txt]
