@@ -19,7 +19,7 @@ const (
 	voiceSpeedFlag = "-r"
 
 	jab      = "jab"
-	wildcard = "whatever"
+	wildcard = "anything"
 )
 
 type myFlags struct {

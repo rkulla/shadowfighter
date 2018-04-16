@@ -52,7 +52,7 @@ There are some default files to get you started. Feel free to edit them how you 
 
     `./shadowfighter -delay=3s -combo -wildcard < thai-boxing.txt`
 
-  For wildcard it will say "whatever" last. So do whatever you want (e.g. Spinning Back Fist).
+  For wildcard it will say "anything" last. So do whatever you want (e.g. Spinning Back Fist).
 
 * FMA (Filipino Martial Arts, such as Kali/Arnis/Eskrima):
 
