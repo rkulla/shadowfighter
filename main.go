@@ -25,9 +25,11 @@ type myFlags struct {
 	combo, jabFirst, wildcard *bool
 }
 
-func main() {
+func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
+}
 
+func main() {
 	moves, err := getInput()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "reading standard input:", err)
@@ -38,27 +40,19 @@ func main() {
 
 	for {
 		time.Sleep(*mf.delay)
-
-		randCount, _ := cryptorand.Int(cryptorand.Reader, big.NewInt(2))
-		var sum big.Int
-		var cmdCount int
-		if *mf.combo {
-			cmdCount = int(sum.Add(randCount, big.NewInt(1)).Int64())
-		} else {
-			cmdCount = 1
-		}
+		moveCount := mf.GetMoveCount()
 
 		if *mf.jabFirst {
 			mf.DoCommand("jab")
 		}
 
 		i := 0
-		for i < cmdCount {
+		for i < moveCount {
 			mf.DoCommand(getPseudoRandomMove(moves))
 			i++
 		}
 
-		if *mf.wildcard && cmdCount%2 == 0 {
+		if *mf.wildcard && moveCount%2 == 0 {
 			mf.DoCommand("whatever")
 		}
 	}
@@ -92,6 +86,21 @@ func getMyFlags() *myFlags {
 	}
 	flag.Parse()
 	return &mf
+}
+
+func (mf *myFlags) GetMoveCount() int {
+	randCount, _ := cryptorand.Int(cryptorand.Reader, big.NewInt(2))
+	var sum big.Int
+	var moveCount int
+
+	// If combos are enabled, we'll only randomly call them out
+	if *mf.combo {
+		moveCount = int(sum.Add(randCount, big.NewInt(1)).Int64())
+	} else {
+		moveCount = 1
+	}
+
+	return moveCount
 }
 
 func (mf *myFlags) DoCommand(move string) {
