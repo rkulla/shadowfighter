@@ -17,6 +17,9 @@ const (
 	voiceCmd       = "say"
 	voiceFlag      = "-v"
 	voiceSpeedFlag = "-r"
+
+	jab      = "jab"
+	wildcard = "whatever"
 )
 
 type myFlags struct {
@@ -36,24 +39,28 @@ func main() {
 	}
 
 	mf := getMyFlags()
-	mf.GetReady()
+	mf.Ready()
+	moveCount := 1
 
 	for {
 		time.Sleep(*mf.delay)
-		moveCount := mf.GetMoveCount()
 
 		if *mf.jabFirst {
-			mf.DoCommand("jab")
+			mf.SayMove(jab)
+		}
+
+		if *mf.combo {
+			moveCount = mf.GetRandomMoveCount()
 		}
 
 		i := 0
 		for i < moveCount {
-			mf.DoCommand(getPseudoRandomMove(moves))
+			mf.SayMove(getPseudoRandomMove(moves))
 			i++
 		}
 
 		if *mf.wildcard && moveCount%2 == 0 {
-			mf.DoCommand("whatever")
+			mf.SayMove(wildcard)
 		}
 	}
 }
@@ -67,9 +74,9 @@ func getInput() ([]string, error) {
 	return lines, scanner.Err()
 }
 
-func (mf *myFlags) GetReady() {
+func (mf *myFlags) Ready() {
 	initialWait := 5*time.Second - *mf.delay
-	mf.DoCommand("Get ready")
+	mf.SayMove("Get ready")
 	if initialWait >= 0*time.Second {
 		time.Sleep(initialWait)
 	}
@@ -88,25 +95,16 @@ func getMyFlags() *myFlags {
 	return &mf
 }
 
-func (mf *myFlags) GetMoveCount() int {
+func (mf *myFlags) GetRandomMoveCount() int {
 	var sum big.Int
-	var moveCount int
 	randCount, err := cryptorand.Int(cryptorand.Reader, big.NewInt(2))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Couldn't randomize moves", err)
 	}
-
-	// If combos are enabled, we'll only randomly call them out
-	if *mf.combo {
-		moveCount = int(sum.Add(randCount, big.NewInt(1)).Int64())
-	} else {
-		moveCount = 1
-	}
-
-	return moveCount
+	return int(sum.Add(randCount, big.NewInt(1)).Int64())
 }
 
-func (mf *myFlags) DoCommand(move string) {
+func (mf *myFlags) SayMove(move string) {
 	cmd := exec.Command(voiceCmd, voiceFlag, *mf.voice, voiceSpeedFlag, *mf.speed, move)
 	err := cmd.Run()
 	if err != nil {
