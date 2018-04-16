@@ -89,9 +89,12 @@ func getMyFlags() *myFlags {
 }
 
 func (mf *myFlags) GetMoveCount() int {
-	randCount, _ := cryptorand.Int(cryptorand.Reader, big.NewInt(2))
 	var sum big.Int
 	var moveCount int
+	randCount, err := cryptorand.Int(cryptorand.Reader, big.NewInt(2))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Couldn't randomize moves", err)
+	}
 
 	// If combos are enabled, we'll only randomly call them out
 	if *mf.combo {
