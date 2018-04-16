@@ -28,12 +28,13 @@ type myFlags struct {
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	words, err := getInput()
+	moves, err := getInput()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "reading standard input:", err)
 	}
 
 	mf := getMyFlags()
+	mf.GetReady()
 
 	for {
 		time.Sleep(*mf.delay)
@@ -48,17 +49,17 @@ func main() {
 		}
 
 		if *mf.jabFirst {
-			doCommand(*mf.voice, *mf.speed, "jab")
+			mf.DoCommand("jab")
 		}
 
 		i := 0
 		for i < cmdCount {
-			doCommand(*mf.voice, *mf.speed, getPseudoRandomWord(words))
+			mf.DoCommand(getPseudoRandomMove(moves))
 			i++
 		}
 
 		if *mf.wildcard && cmdCount%2 == 0 {
-			doCommand(*mf.voice, *mf.speed, "whatever")
+			mf.DoCommand("whatever")
 		}
 	}
 }
@@ -72,7 +73,15 @@ func getInput() ([]string, error) {
 	return lines, scanner.Err()
 }
 
-func getMyFlags() myFlags {
+func (mf *myFlags) GetReady() {
+	initialWait := 5*time.Second - *mf.delay
+	mf.DoCommand("Get ready")
+	if initialWait >= 0*time.Second {
+		time.Sleep(initialWait)
+	}
+}
+
+func getMyFlags() *myFlags {
 	mf := myFlags{
 		delay:    flag.Duration("delay", 2*time.Second, "Delay seconds."),
 		voice:    flag.String("voice", "Alex", "Voice"),
@@ -82,20 +91,20 @@ func getMyFlags() myFlags {
 		wildcard: flag.Bool("wildcard", false, "Sometimes finish with whatever move you want"),
 	}
 	flag.Parse()
-	return mf
+	return &mf
 }
 
-func doCommand(voice, voiceSpeed, word string) {
-	cmd := exec.Command(voiceCmd, voiceFlag, voice, voiceSpeedFlag, voiceSpeed, word)
+func (mf *myFlags) DoCommand(move string) {
+	cmd := exec.Command(voiceCmd, voiceFlag, *mf.voice, voiceSpeedFlag, *mf.speed, move)
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func getPseudoRandomWord(words []string) string {
-	rand.Shuffle(len(words), func(i, j int) {
-		words[i], words[j] = words[j], words[i]
+func getPseudoRandomMove(moves []string) string {
+	rand.Shuffle(len(moves), func(i, j int) {
+		moves[i], moves[j] = moves[j], moves[i]
 	})
-	return words[0]
+	return moves[0]
 }
