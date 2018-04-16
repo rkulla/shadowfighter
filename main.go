@@ -19,6 +19,12 @@ const (
 	voiceSpeedFlag = "-r"
 )
 
+type myFlags struct {
+	delay                     *time.Duration
+	voice, speed              *string
+	combo, jabFirst, wildcard *bool
+}
+
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
@@ -27,32 +33,32 @@ func main() {
 		fmt.Fprintln(os.Stderr, "reading standard input:", err)
 	}
 
-	delay, voice, speed, combo, jabFirst, wildcard := getFlags()
+	mf := getMyFlags()
 
 	for {
-		time.Sleep(delay)
+		time.Sleep(*mf.delay)
 
 		randCount, _ := cryptorand.Int(cryptorand.Reader, big.NewInt(2))
 		var sum big.Int
 		var cmdCount int
-		if combo {
+		if *mf.combo {
 			cmdCount = int(sum.Add(randCount, big.NewInt(1)).Int64())
 		} else {
 			cmdCount = 1
 		}
 
-		if jabFirst {
-			doCommand(voice, speed, "jab")
+		if *mf.jabFirst {
+			doCommand(*mf.voice, *mf.speed, "jab")
 		}
 
 		i := 0
 		for i < cmdCount {
-			doCommand(voice, speed, getPseudoRandomWord(words))
+			doCommand(*mf.voice, *mf.speed, getPseudoRandomWord(words))
 			i++
 		}
 
-		if wildcard && cmdCount%2 == 0 {
-			doCommand(voice, speed, "whatever")
+		if *mf.wildcard && cmdCount%2 == 0 {
+			doCommand(*mf.voice, *mf.speed, "whatever")
 		}
 	}
 }
@@ -66,16 +72,17 @@ func getInput() ([]string, error) {
 	return lines, scanner.Err()
 }
 
-func getFlags() (time.Duration, string, string, bool, bool, bool) {
-	delay := flag.Duration("delay", 2*time.Second, "Delay seconds.")
-	voice := flag.String("voice", "Alex", "Voice")
-	speed := flag.String("speed", "300", "Voice speed.")
-	combo := flag.Bool("combo", false, "Sometimes do combinations")
-	jabFirst := flag.Bool("jab", false, "Always jab first. Great for boxing")
-	wildcard := flag.Bool("wildcard", false, "Sometimes finish with whatever move you want")
+func getMyFlags() myFlags {
+	mf := myFlags{
+		delay:    flag.Duration("delay", 2*time.Second, "Delay seconds."),
+		voice:    flag.String("voice", "Alex", "Voice"),
+		speed:    flag.String("speed", "300", "Voice speed."),
+		combo:    flag.Bool("combo", false, "Sometimes do combinations"),
+		jabFirst: flag.Bool("jab", false, "Always jab first. Great for boxing"),
+		wildcard: flag.Bool("wildcard", false, "Sometimes finish with whatever move you want"),
+	}
 	flag.Parse()
-	return *delay, *voice, *speed, *combo, *jabFirst, *wildcard
-
+	return mf
 }
 
 func doCommand(voice, voiceSpeed, word string) {
