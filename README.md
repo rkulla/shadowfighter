@@ -9,11 +9,9 @@ It's designed to be customizable: Simply tweak the provided text files or add yo
 
 ## Usage
 
-First build the binary with:
+    ./shadowfighter [flags] < [file.txt]
 
-    $ go build
-
-Now you can run `./shadowfighter [flags] < [file.txt]`
+If you want to change the source code, edit main.go and run `go build` to rebuild the shadowfighter binary.
 
 Flags:
 
