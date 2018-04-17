@@ -14,7 +14,7 @@ Currently requires a Mac and the free [say](https://support.apple.com/kb/PH25378
 
 ## Usage
 
-    ./shadowfighter [flags] < [file.txt]
+    ./shadowfighter [flags] < [drills/file.txt]
 
 If you want to change the source code, edit main.go and run `go build` to rebuild the shadowfighter binary.
 
@@ -46,17 +46,17 @@ There are some default files to get you started. Feel free to edit them how you 
 
 * Boxing:
 
-    `./shadowfighter -jab -combo < boxing.txt`
+    `./shadowfighter -jab -combo < drills/boxing.txt`
 
 * Muay Thai: 
 
-    `./shadowfighter -delay=3s -combo -wildcard < thai-boxing.txt`
+    `./shadowfighter -delay=3s -combo -wildcard < drills/thai-boxing.txt`
 
   For wildcard it will say "anything" last. So do whatever you want (e.g. Spinning Back Fist).
 
 * FMA (Filipino Martial Arts, such as Kali/Arnis/Eskrima):
 
-    `./shadowfighter -combo < fma.txt`
+    `./shadowfighter -combo < drills/fma.txt`
 
   Calls out angles of attack 1-7. Add more if you want.
 
@@ -64,5 +64,5 @@ There are some default files to get you started. Feel free to edit them how you 
 
 * Tai Chi:
 
-    `./shadowfighter -delay=7s --speed=200 -voice=Victoria < taichi.txt`
+    `./shadowfighter -delay=7s --speed=200 -voice=Victoria < drills/taichi.txt`
 
