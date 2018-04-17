@@ -28,6 +28,44 @@ type myFlags struct {
 	combo, jabFirst, wildcard *bool
 }
 
+func newMyFlags() *myFlags {
+	mf := myFlags{
+		delay:    flag.Duration("delay", 2*time.Second, "Delay seconds."),
+		voice:    flag.String("voice", "Alex", "Voice"),
+		speed:    flag.String("speed", "300", "Voice speed."),
+		combo:    flag.Bool("combo", false, "Sometimes do combinations"),
+		jabFirst: flag.Bool("jab", false, "Always jab first. Great for boxing"),
+		wildcard: flag.Bool("wildcard", false, "Sometimes finish with whatever move you want"),
+	}
+	flag.Parse()
+	return &mf
+}
+
+func (mf *myFlags) Ready() {
+	initialWait := 5*time.Second - *mf.delay
+	mf.SayMove("Get ready")
+	if initialWait >= 0*time.Second {
+		time.Sleep(initialWait)
+	}
+}
+
+func (mf *myFlags) GetRandomMoveCount() int {
+	var sum big.Int
+	randCount, err := cryptorand.Int(cryptorand.Reader, big.NewInt(2))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Couldn't randomize moves", err)
+	}
+	return int(sum.Add(randCount, big.NewInt(1)).Int64())
+}
+
+func (mf *myFlags) SayMove(move string) {
+	cmd := exec.Command(voiceCmd, voiceFlag, *mf.voice, voiceSpeedFlag, *mf.speed, move)
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
@@ -38,7 +76,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, "reading standard input:", err)
 	}
 
-	mf := getMyFlags()
+	mf := newMyFlags()
 	mf.Ready()
 	moveCount := 1
 
@@ -72,44 +110,6 @@ func getInput() ([]string, error) {
 		lines = append(lines, scanner.Text())
 	}
 	return lines, scanner.Err()
-}
-
-func (mf *myFlags) Ready() {
-	initialWait := 5*time.Second - *mf.delay
-	mf.SayMove("Get ready")
-	if initialWait >= 0*time.Second {
-		time.Sleep(initialWait)
-	}
-}
-
-func getMyFlags() *myFlags {
-	mf := myFlags{
-		delay:    flag.Duration("delay", 2*time.Second, "Delay seconds."),
-		voice:    flag.String("voice", "Alex", "Voice"),
-		speed:    flag.String("speed", "300", "Voice speed."),
-		combo:    flag.Bool("combo", false, "Sometimes do combinations"),
-		jabFirst: flag.Bool("jab", false, "Always jab first. Great for boxing"),
-		wildcard: flag.Bool("wildcard", false, "Sometimes finish with whatever move you want"),
-	}
-	flag.Parse()
-	return &mf
-}
-
-func (mf *myFlags) GetRandomMoveCount() int {
-	var sum big.Int
-	randCount, err := cryptorand.Int(cryptorand.Reader, big.NewInt(2))
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Couldn't randomize moves", err)
-	}
-	return int(sum.Add(randCount, big.NewInt(1)).Int64())
-}
-
-func (mf *myFlags) SayMove(move string) {
-	cmd := exec.Command(voiceCmd, voiceFlag, *mf.voice, voiceSpeedFlag, *mf.speed, move)
-	err := cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func getPseudoRandomMove(moves []string) string {
