@@ -14,9 +14,11 @@ Currently requires a Mac and the free [say](https://support.apple.com/kb/PH25378
 
 ## Usage
 
-    ./shadowfighter [flags] < [drills/file.txt]
+    $ ./shadowfighter [flags] < [drills/file.txt]
 
-If you want to change the source code, edit main.go and run `go build` to rebuild the shadowfighter binary.
+If you want to change the source code, edit it, then rebuild the shadowfighter binary with:
+ 
+    $ go build -o shadowfighter cmd/shadowfighter/main.go
 
 Flags:
 
