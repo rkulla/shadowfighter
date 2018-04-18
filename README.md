@@ -16,6 +16,13 @@ Currently requires a Mac and the free [say](https://support.apple.com/kb/PH25378
 
     $ ./shadowfighter [flags] < [drills/file.txt]
 
+There are some example drills included in the drills/ folder. You can use them, copy them to .txt files:
+
+    $ cd drills/
+    $ cp boxing.txt.example example.txt
+
+This is because they're .txt files are gitignored, so when you create your own, you won't accidentally commit them.
+
 If you want to change the source code, edit it, then rebuild the shadowfighter binary with:
  
     $ go build -o shadowfighter cmd/shadowfighter/main.go
