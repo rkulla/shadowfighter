@@ -50,7 +50,7 @@ func (mf *myFlags) Ready() {
 	}
 }
 
-// GetRandomMoveCount returns 0 or 1 randomly
+// GetRandomMoveCount returns int 1 or 2 randomly
 func (mf *myFlags) GetRandomMoveCount() int {
 	var sum big.Int
 	randCount, err := cryptorand.Int(cryptorand.Reader, big.NewInt(2))
