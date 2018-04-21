@@ -25,29 +25,29 @@ func main() {
 		fmt.Fprintln(os.Stderr, "reading standard input:", err)
 	}
 
-	mf := shadowfighter.NewMyFlags()
-	mf.Ready()
+	flags := shadowfighter.NewFlags()
+	shadowfighter.Ready(flags)
 	moveCount := 1
 
 	for {
-		time.Sleep(*mf.Delay)
+		time.Sleep(*flags.Delay)
 
-		if *mf.JabFirst {
-			mf.SayMove(jab)
+		if *flags.JabFirst {
+			shadowfighter.SayMove(jab, flags)
 		}
 
-		if *mf.Combo {
-			moveCount = mf.GetRandomMoveCount()
+		if *flags.Combo {
+			moveCount = shadowfighter.GetRandomMoveCount()
 		}
 
 		i := 0
 		for i < moveCount {
-			mf.SayMove(shadowfighter.GetPseudoRandomMove(moves))
+			shadowfighter.SayMove(shadowfighter.GetPseudoRandomMove(moves), flags)
 			i++
 		}
 
-		if *mf.Wildcard && moveCount%2 == 0 {
-			mf.SayMove(wildcard)
+		if *flags.Wildcard && moveCount%2 == 0 {
+			shadowfighter.SayMove(wildcard, flags)
 		}
 	}
 }
